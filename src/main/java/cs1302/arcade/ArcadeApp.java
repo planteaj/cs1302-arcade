@@ -48,10 +48,18 @@ public class ArcadeApp extends Application {
             System.out.println(event);
             switch (event.getCode()) {
             case LEFT:  // KeyCode.LEFT
-                r.setX(r.getX() - 10.0);
+                if(r.getX() <= 0 ) {
+                    r.setX(0.0);
+                } else {
+                    r.setX(r.getX() - 10.0);
+                } //else
                 break;
             case RIGHT: // KeyCode.RIGHT
-                r.setX(r.getX() + 10.0);
+                if(r.getX() > 600) {
+                    r.setX(620);
+                } else {
+                    r.setX(r.getX() + 10.0);
+                } //else
                 break;
             default:
                 // do nothing
@@ -70,15 +78,14 @@ public class ArcadeApp extends Application {
          * (rectangle) in a group.
          */
 
-        r.setX(50);                                // 50px in the x direction (right)
-        r.setY(50);                                // 50ps in the y direction (down)
         group.getChildren().add(r);                // add to main container
-        r.setOnMouseClicked(createMouseHandler()); // clicks on the rectangle move it randomly
+//        r.setOnMouseClicked(createMouseHandler()); // clicks on the rectangle move it randomly
         group.setOnKeyPressed(createKeyHandler()); // left-right key presses move the rectangle
 
-        Scene scene = new Scene(group, 640, 480);
+        //      Scene scene = new Scene(group, 640, 480);
+        Scene centiped = centipede();
         stage.setTitle("cs1302-arcade!");
-        stage.setScene(scene);
+        stage.setScene(centiped);
         stage.sizeToScene();
         stage.show();
 
@@ -87,5 +94,13 @@ public class ArcadeApp extends Application {
         group.requestFocus();
 
     } // start
+
+    private Scene centipede() {
+        Scene centipede = new Scene(group, 640, 480);
+        r.setX(320);
+        r.setY(460);
+        // || r.get(x) < = 0) {
+        return centipede;
+    } //centipede
 
 } // ArcadeApp
