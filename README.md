@@ -204,9 +204,9 @@ non-compliance results in the full point amount being subtracted from your
 point total. That is, they are all or nothing.
 
 * **User-Friendly Experience (10 points):** The windows of your application
-  should not exceed a pixel dimension of `1280` (width) by `720` (height). 
-  Additionally, except for reasonable delays resulting from X forwarding, your 
-  application should not hang/freeze or crash during execution. If a grader 
+  should not exceed a pixel dimension of `1280` (width) by `720` (height).
+  Additionally, except for reasonable delays resulting from X forwarding, your
+  application should not hang/freeze or crash during execution. If a grader
   encounters lag, then they will try to run your application locally using Oracle
   Java 8.
 
@@ -216,23 +216,23 @@ point total. That is, they are all or nothing.
 
   You should place local files under `resources` in your project directory (you may need to
   create the `resources` directory). URLs prefixed with `file:` should be relative to your
-  project directory. 
-   
+  project directory.
+
   Example:
-   
+
   | Resource                | URL                            |
   |-------------------------|--------------------------------|
   | `resources/icon.png`    | `"file:resources/icon.png"`    |
   | `resources/foo/img.png` | `"file:resources/foo/img.png"` |
-  
-* **(20 points) Code Style Guidelines:** You should be consistent with the style 
+
+* **(20 points) Code Style Guidelines:** You should be consistent with the style
   aspect of your code in order to promote readability. Every `.java` file that
-  you include as part of your submission for this project must be in valid style 
+  you include as part of your submission for this project must be in valid style
   as defined in the [CS1302 Code Style Guide](https://github.com/cs1302uga/cs1302-styleguide).
-  All of the individual code style guidelines listed in that document are part 
+  All of the individual code style guidelines listed in that document are part
   of this single non-functional requirement. Like the other non-functional
-  requirements, this requirement is all or nothing. 
-  
+  requirements, this requirement is all or nothing.
+
   **NOTE:** The [CS1302 Code Style Guide](https://github.com/cs1302uga/cs1302-styleguide)
   includes instructions on how to use the `checkstyle` program to check
   your code for compliance on Nike.
@@ -312,7 +312,7 @@ made to modify your submission to evaluate other requirements.
   $ export MAVEN_OPTS=-Dprism.order=sw;
   $ mvn -e exec:java -Dexec.mainClass="cs1302.arcade.ArcadeDriver"
   ```
-  
+
   The following may also work to run the program:
   ```
   $ mvn -e -Dprism.order=sw exec:java -Dexec.mainClass="cs1302.arcade.ArcadeDriver"
@@ -345,14 +345,14 @@ made to modify your submission to evaluate other requirements.
   Your instructors will have access to your private repository's history. This
   means that they can see who did what and when based on the log.
 
-* **Development Environment:** This project must be implemented 
+* **Development Environment:** This project must be implemented
   in Java 8, and it *must compile and run* correctly on Nike using the specific
   version of Java 8 that is setup according to the instructions provided
-  by your instructor. For this requirement, the term *compile* should be 
+  by your instructor. For this requirement, the term *compile* should be
   interpreted as *compile with no errors or warnings*.
-  
+
   If you decide to introduce additional `.java` files into your project,
-  then they are expected to fulfill all non-functional and absolute requirements, 
+  then they are expected to fulfill all non-functional and absolute requirements,
   even if the main parts of the project do not use them. You may assume
   graders will compile your source code in an order that satisfies
   compilation dependencies. You should remove any `.java` files that you
@@ -465,9 +465,9 @@ may be less familiar with how to put together a game. To illustrate some of the 
 capabilities of JavaFX, including event handlers for mouse and keyboard input, some
 starter code has been provided. **Please read, compile, and execute the starter code.**
 You are not required to use the starter code as a foundation for your program; however,
-you are required to meet the Project Structure absolute requirement. 
+you are required to meet the Project Structure absolute requirement.
 
-Here is a video that demonstrates the executation of the starter code 
+Here is a video that demonstrates the executation of the starter code
 (click [here](https://www.youtube.com/watch?v=mwdF5eZoCHc) or the image below):
 
 [![ArcadeApp Starter Code](starter-code.png)](https://www.youtube.com/watch?v=mwdF5eZoCHc)
@@ -477,15 +477,15 @@ mouse-related classes used in the starter code:
 
 * [`javafx.scene.input.KeyEvent`](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html):
   used as the input parameter type for the `handle` method in a keyboard-related event handler.
-  
+
 * [`javafx.scene.input.KeyCode`](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyCode.html):
   an enumeration that describes the possible outputs of calling `getCode()` on a `KeyEvent` object.
-  
+
 * [`javafx.scene.input.MouseEvent`](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html):
   used as the input parameter type for the `handle` method in a mouse-related event handler.
-  
+
 Please note that the datatype for a keyboard-related event handler needs to be `EventHandler<? super KeyEvent>` and
-not merely `EventHandler<KeyEvent>`. Likewise, the the datatype for a mouse-related event handler needs to be 
+not merely `EventHandler<KeyEvent>`. Likewise, the the datatype for a mouse-related event handler needs to be
 `EventHandler<? super MouseEvent>` and not `EventHandler<MouseEvent>`.
 
 # Appendix - Workflow
@@ -715,20 +715,20 @@ a useful resource as well.
 
    The easiest way to do that is to pull changes from the team repository, resolve
    merge conflicts if necessary, then push.
-   
+
    <a id="delegate"/>
-   
+
 1. **Is there an easier way to delegate code to threads?**
 
    Keeping track of what code is running on a new thread and what code is running on
    the JavaFX Application Thread can be challenging at first. One of the reasons for this
    is perhaps due to the different ways that we send `Runnable` object references around
-   in each scenario. To simplify this, I recommend that you use the methods described 
+   in each scenario. To simplify this, I recommend that you use the methods described
    below (or something similar); they will make it easier for you to identify where the
    code in your `Runnable` is being executed.
-   
+
    ```java
-   /** 
+   /**
     * Creates and immediately starts a new thread that executes {@code target.run()}.
     * This method, which may be called from any thread, will return immediately to the
     * caller.
@@ -740,18 +740,18 @@ a useful resource as well.
    public static void runOnNewThread(boolean daemon, Runnable target) {
        Thread t = new Thread(target);
        t.setDaemon(daemon);
-       t.start(); 
+       t.start();
    } // runOnNewThread
    ```
-   
+
    ```java
-   /** 
+   /**
     * Executes {@code target.run()} on the JavaFX Application Thread at some unspecified
-    * time in the future. This method, which may be called from any thread, will return 
+    * time in the future. This method, which may be called from any thread, will return
     * immediately to the caller. If this method is called more than once, then the
-    * {@code Runnable} objects are executed in the order they are posted. 
+    * {@code Runnable} objects are executed in the order they are posted.
     *
-    * @param target the object whose {@code run} method is invoked on the JavaFX 
+    * @param target the object whose {@code run} method is invoked on the JavaFX
     *               Application Thread
     */
    public static void runOnFxThread(Runnable target) {
