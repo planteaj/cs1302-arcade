@@ -7,12 +7,11 @@ that the Markdown is transformed into nice looking HTML.
 
 Here is a sample entry (delete this line; also: feel free to copy/paste/modify):
 
-## SUN 2019-04-05 @ 11:55 PM EST
+## Tuesday 2019-11-19 @ 11:55 PM EST
 
-1. **DONE:** Downloaded the skeleton code.
+1. **DONE:** Downloaded the skeleton code, Worked on the character bounds and attempted to make enemy ai for the first game.
 
-2. **TODO:** Finish reading the project description.
+2. **TODO:** Make the scene setup and have the other features of the first game workable, add actual assets to the game.
 
 3. **PROB:** Had a hard time scheduling physicial meetings with each other at
-   first, but now that we've settled on a regular day/time things are looking
-   great!
+   first, but should hopefully be better. It is also hard trying to figure out how to make a game properly, and it seems more complicated than I originally thought.
