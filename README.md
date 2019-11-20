@@ -262,9 +262,7 @@ point total. That is, they are all or nothing.
   * Creative Commons Attribution 3.0 Unported (CC BY 3.0)
   ```
 
-<a name="reflections"/>
-
-* **(40 points; 10 points each) Reflection Updates:** Before each submission
+* <a name="reflections"/>**(40 points; 10 points each) Reflection Updates:** Before each submission
   deadline mentioned towards the beginning of this document, you
   will need to update your project's `REFLECTION.md` file to include a new
   section describing:
@@ -273,8 +271,8 @@ point total. That is, they are all or nothing.
   2. The work you plan to complete before the next deadline (except for the last submission); and
   3. What problems, if any, you have encountered related to this project.
 
-  **These changes, including your work in progress, must be committed to your
-  repository.** The commit should also be tagged using Git. For example:
+  **These changes, including your work in progress, must be committed to your repository.** 
+  The commit should also be tagged using Git. For example:
 
   ```
   $ git tag -am "Partial Submission 1" deadline1
@@ -685,7 +683,7 @@ a useful resource as well.
    [`javafx.scene.shape`](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/shape/package-summary.html)
    package.
 
-1. **Git won't let me `git pull` my team's repository!?**
+1. <a name="non-fast-forward"/>**Git won't let me `git push` my team's repository!?**
 
    When you tried to `git push`, you likely received some output similar to following
 
