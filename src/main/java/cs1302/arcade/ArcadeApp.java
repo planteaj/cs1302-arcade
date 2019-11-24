@@ -50,17 +50,29 @@ public class ArcadeApp extends Application {
                                                new EventHandler<ActionEvent>() {
                                                  public void handle(ActionEvent event) {
                 if(e.getX() > 600) {
-                    e.setY(e.getY() - 20.0);
+                    e.setY(e.getY() + 20.0);
                     rightE = false;
                 } else if(e.getX() <= 0.0) {
-                    e.setY(e.getY() - 20.0);
+                    e.setY(e.getY() + 20.0);
                     rightE = true;
                 }
                 if(rightE) {
-                    e.setX(e.getX() + 1.0);
+                    e.setX(e.getX() + 10.0);
                 } else {
-                    e.setX(e.getX() - 1.0);
+                    e.setX(e.getX() - 10.0);
                 } //else
+
+                if(e.getY() < 180){
+
+                    if(e.getY() < 240) {
+                        e.setY(240);
+                        if(e.getX() > 600) {
+                            e.setY(e.getY() -20.0);
+                            rightE = false;
+                        } else if(e.getX() <= 0.0) {
+                            e.setY(e.getY() - 20.0);
+                            rightE = true;
+                }
 
                 }
             }); // oneFrame
