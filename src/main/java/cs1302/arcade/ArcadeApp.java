@@ -72,7 +72,7 @@ public class ArcadeApp extends Application {
                         } else if(e.getX() <= 0.0) {
                             e.setY(e.getY() - 20.0);
                             rightE = true;
-                }
+                        }
 
                 }
             }); // oneFrame
