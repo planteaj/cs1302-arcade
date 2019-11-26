@@ -30,6 +30,8 @@ public class ArcadeApp extends Application {
     Rectangle e = new Rectangle(20, 20); // temp enemy rectangel
     boolean daemon = true;
     boolean rightE = true;
+    boolean upE = false;
+    int eSpeed = 10;
     final Timeline timeline = gamePlayLoop();
     /**
      * Return a mouse event handler that moves to the rectangle to a random
@@ -45,36 +47,40 @@ public class ArcadeApp extends Application {
     } // createMouseHandler
 
     private Timeline gamePlayLoop() {
+
+
         final Duration oneFrameAmt = Duration.millis(1000/60);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                                                new EventHandler<ActionEvent>() {
                                                  public void handle(ActionEvent event) {
-                if(e.getX() > 600) {
-                    e.setY(e.getY() + 20.0);
+                if(!upE && e.getX() > 600) {
+                    e.setY(e.getY() + eSpeed);
                     rightE = false;
-                } else if(e.getX() <= 0.0) {
-                    e.setY(e.getY() + 20.0);
+                } else if(!upE && e.getX() <= 0.0) {
+                    e.setY(e.getY() + eSpeed);
                     rightE = true;
                 }
                 if(rightE) {
-                    e.setX(e.getX() + 10.0);
+                    e.setX(e.getX() + eSpeed);
                 } else {
-                    e.setX(e.getX() - 10.0);
+                    e.setX(e.getX() - eSpeed);
                 } //else
-
-                if(e.getY() < 180){
-
-                    if(e.getY() < 240) {
-                        e.setY(240);
-                        if(e.getX() > 600) {
-                            e.setY(e.getY() -20.0);
-                            rightE = false;
-                        } else if(e.getX() <= 0.0) {
-                            e.setY(e.getY() - 20.0);
-                            rightE = true;
-                        }
-
+        System.out.println("x value: " + e.getX());
+        System.out.println("Y value: " + e.getY());
+                if(e.getY()  > 440){
+                    upE = true;
                 }
+                if(upE && e.getY() < 380) {
+                    upE = false;
+                }
+                if(upE == true &&e.getX() > 600) {
+                    e.setY(e.getY() -eSpeed);
+                    rightE = false;
+                } else if(upE && e.getX() <= 0.0) {
+                    e.setY(e.getY() - eSpeed);
+                    rightE = true;
+                }
+                                                 }
             }); // oneFrame
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -104,6 +110,20 @@ public class ArcadeApp extends Application {
                 } else {
                     r.setX(r.getX() + 10.0);
                 } //else
+                break;
+            case UP:
+                if(r.getY() < 380) {
+                    r.setY(360);
+                } else {
+                    r.setY(r.getY() - 10);
+                }
+                break;
+            case DOWN:
+                if(r.getY() > 440) {
+                    r.setY(460);
+                } else {
+                    r.setY(r.getY() + 10);
+                }
                 break;
             default:
                 // do nothing
