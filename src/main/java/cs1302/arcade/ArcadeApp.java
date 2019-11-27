@@ -31,7 +31,7 @@ public class ArcadeApp extends Application {
     boolean daemon = true;
     boolean rightE = true;
     boolean upE = false;
-    int eSpeed = 10;
+    int eSpeed = 1;
     final Timeline timeline = gamePlayLoop();
     /**
      * Return a mouse event handler that moves to the rectangle to a random
@@ -53,7 +53,7 @@ public class ArcadeApp extends Application {
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                                                new EventHandler<ActionEvent>() {
                                                  public void handle(ActionEvent event) {
-                if(!upE && e.getX() > 600) {
+                if(!upE && e.getX() > 640) {
                     e.setY(e.getY() + eSpeed);
                     rightE = false;
                 } else if(!upE && e.getX() <= 0.0) {
