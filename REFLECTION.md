@@ -20,4 +20,13 @@ that the Markdown is transformed into nice looking HTML.
 1. **DONE:** Basic variables that represent the centiped game scene. A group that contains the event handlers and rectangle that represents the centipede. When the handler is triggered, the centipede randomly moves.
 
 2. **TODO:** Add the other elements of the centipede gameplay, along with the aesthetic components.
+======
+## TUE 2019-11-26 @ 11:55 PM EST
+
+1. **DONE** Movement of the centipede game is nearly complete. Layout of the main screen is complete. Scenes to represent both games have been created.
+
+2. **TODO** Finish centipede gameplay movement. Start work on reversi gameplay. Load graphics from online into the games.
+
+3. **PROB** Meeting is a little difficult due to our schedules and living arrangements, but we're gonna continue working around them. Minimal issues in the code.
+
 >>>>>>> 77543b849d528c684cab13e8b89d0f9c17702c2d
