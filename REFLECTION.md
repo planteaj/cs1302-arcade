@@ -1,4 +1,4 @@
-# Reflection
+n# Reflection
 
 Add to this file to satisfy the "Reflection Updates" non-functional requirement
 for this project. Please keep this document organized using Markdown. If you
@@ -30,3 +30,11 @@ that the Markdown is transformed into nice looking HTML.
 3. **PROB** Meeting is a little difficult due to our schedules and living arrangements, but we're gonna continue working around them. Minimal issues in the code.
 
 >>>>>>> 77543b849d528c684cab13e8b89d0f9c17702c2d
+
+## Tuesday 2019-26-19 @ 11:55 PM EST
+
+1. **DONE:** made working code for the player input and enemy ai, and have some basic scene setup formed. Also have some minor work done on the main menu
+
+2. **TODO:** Setup the "game" aspects of the game such as levels or score, and add in assets.
+
+3. **PROB:** Trying to figure out what parts of javafx to use and where was difficult. I wasn't sure how to do the core gameplay loop until I realized I should use the Timeline class.
