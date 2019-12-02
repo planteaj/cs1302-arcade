@@ -31,7 +31,22 @@ public class ArcadeApp extends Application {
     boolean daemon = true;
     boolean rightE = true;
     boolean upE = false;
-    int eSpeed = 1;
+    boolean movingBullet = false;
+    boolean upPressed = false;
+    boolean downPressed = false;
+    boolean leftPressed = false;
+    boolean rightPressed = false;
+    boolean spacePressed = false;
+    boolean upReleased = false;
+    boolean downReleased = false;
+    boolean leftReleased = false;
+    boolean rightReleased = false;
+    boolean spaceReleased = false;
+
+    int eSpeed = 4;
+    int eDown = 20;
+    Rectangle[] c = new Rectangle[10];
+    Rectangle bullet = new Rectangle();
     final Timeline timeline = gamePlayLoop();
     /**
      * Return a mouse event handler that moves to the rectangle to a random
@@ -52,36 +67,89 @@ public class ArcadeApp extends Application {
         final Duration oneFrameAmt = Duration.millis(1000/60);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                                                new EventHandler<ActionEvent>() {
-                                                 public void handle(ActionEvent event) {
-                if(!upE && e.getX() > 640) {
-                    e.setY(e.getY() + eSpeed);
-                    rightE = false;
-                } else if(!upE && e.getX() <= 0.0) {
-                    e.setY(e.getY() + eSpeed);
-                    rightE = true;
-                }
-                if(rightE) {
-                    e.setX(e.getX() + eSpeed);
-                } else {
-                    e.setX(e.getX() - eSpeed);
-                } //else
-        System.out.println("x value: " + e.getX());
-        System.out.println("Y value: " + e.getY());
-                if(e.getY()  > 440){
-                    upE = true;
-                }
-                if(upE && e.getY() < 380) {
-                    upE = false;
-                }
-                if(upE == true &&e.getX() > 600) {
-                    e.setY(e.getY() -eSpeed);
-                    rightE = false;
-                } else if(upE && e.getX() <= 0.0) {
-                    e.setY(e.getY() - eSpeed);
-                    rightE = true;
-                }
-                                                 }
-            }); // oneFrame
+                                                   public void handle(ActionEvent event) {
+               for(int i = 0; i < c.length; i++) {
+                   if(i == c.length - 1) {
+                       c[i].setX(e.getX());
+                       c[i].setY(e.getY());
+                   } else {
+                       c[i].setY(c[i+1].getY());
+                       c[i].setX(c[i+1].getX());
+                   }
+               }
+                   if(!upE && e.getX() > 620) {
+                       e.setY(e.getY() + eDown);
+                       rightE = false;
+                   } else if(!upE && e.getX() <= 0.0) {
+                       e.setY(e.getY() + eDown);
+                       rightE = true;
+                   }
+                   if(rightE) {
+                       e.setX(e.getX() + eSpeed);
+                   } else {
+                       e.setX(e.getX() - eSpeed);
+                   } //else
+                   System.out.println("x value: " + bullet.getX());
+                   System.out.println("Y value: " + bullet.getY());
+                   if(e.getY()  > 440){
+                       upE = true;
+                   }
+                   if(upE && e.getY() < 380) {
+                       upE = false;
+                   }
+                   if(upE == true && e.getX() > 600) {
+                       e.setY(e.getY() - eDown);
+                       rightE = false;
+                   } else if(upE && e.getX() <= 0.0) {
+                       e.setY(e.getY() - eDown);
+                       rightE = true;
+                   }
+
+                   if(leftPressed == true) {
+                       if(r.getX() <= 0 ) {
+                           r.setX(0.0);
+                       } else {
+                           r.setX(r.getX() - 10.0);
+                       } //else
+                   } // if
+
+                   if(rightPressed == true) {
+                       if(r.getX() > 600) {
+                           r.setX(620);
+                       } else {
+                           r.setX(r.getX() + 10.0);
+                       } //else
+                   } //if
+
+                   if(upPressed == true) {
+                       if(r.getY() < 380) {
+                           r.setY(360);
+                       } else {
+                           r.setY(r.getY() - 10);
+                       }
+                   } //if
+
+                   if(downPressed == true) {
+                       if(r.getY() > 440) {
+                           r.setY(460);
+                       } else {
+                           r.setY(r.getY() + 10);
+                       }
+                   }//if
+
+                   if(bullet.getY() >= -5){
+                       bullet.setY(bullet.getY()-5);
+                       movingBullet = true;
+                   } else {
+                       movingBullet = false;
+                   }
+
+                   if(spacePressed && movingBullet == false) {
+                       bullet.setX(r.getX());
+                       bullet.setY(r.getY());
+                   } //if
+                                                   }
+                                               }); // oneFrame
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(oneFrame);
@@ -93,57 +161,66 @@ public class ArcadeApp extends Application {
      * node.
      * @return the key event handler
      */
-    private EventHandler<? super KeyEvent> createKeyHandler() {
+    private EventHandler<? super KeyEvent> createHandlerOnPressed() {
         return event -> {
             System.out.println(event);
             switch (event.getCode()) {
             case LEFT:  // KeyCode.LEFT
-                if(r.getX() <= 0 ) {
-                    r.setX(0.0);
-                } else {
-                    r.setX(r.getX() - 10.0);
-                } //else
+                leftPressed = true;
                 break;
             case RIGHT: // KeyCode.RIGHT
-                if(r.getX() > 600) {
-                    r.setX(620);
-                } else {
-                    r.setX(r.getX() + 10.0);
-                } //else
+                rightPressed = true;
                 break;
             case UP:
-                if(r.getY() < 380) {
-                    r.setY(360);
-                } else {
-                    r.setY(r.getY() - 10);
-                }
+                upPressed = true;
                 break;
             case DOWN:
-                if(r.getY() > 440) {
-                    r.setY(460);
-                } else {
-                    r.setY(r.getY() + 10);
-                }
+                downPressed = true;
+                break;
+            case SPACE:
+                spacePressed = true;
                 break;
             default:
                 // do nothing
             } // switch
             // TODO bounds checking
         };
-    } // createKeyHandler
+    } // createHandlerOnPressed
+
+
+        private EventHandler<? super KeyEvent> createHandlerOnReleased() {
+        return event -> {
+            System.out.println(event);
+            switch (event.getCode()) {
+            case LEFT:  // KeyCode.LEFT
+                leftPressed =false;
+                break;
+            case RIGHT: // KeyCode.RIGHT
+                rightPressed = false;
+                break;
+            case UP:
+                upPressed =false;
+                break;
+            case DOWN:
+                downPressed = false;
+                break;
+            case SPACE:
+                spacePressed = false;
+                break;
+            default:
+            } // switch
+        };
+    } // createHandlerOnReleased
 
     /** {@inheritDoc} */
     @Override
     public void start(Stage stage) {
-        group.getChildren().addAll(r, e);                // add to main container
-        group.setOnKeyPressed(createKeyHandler());
+
         Scene centiped = centipede();
         stage.setTitle("cs1302-arcade!");
         stage.setScene(centiped);
         stage.sizeToScene();
-
         stage.show();
-
         // the group must request input focus to receive key events
         // @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#requestFocus--
         group.requestFocus();
@@ -160,10 +237,24 @@ public class ArcadeApp extends Application {
         Scene centipede = new Scene(group, 640, 480);
         r.setX(320);
         r.setY(460);
-        e.setX(100);
-        e.setY(240);
+        group.getChildren().addAll(r, e);                // add to main container
+        group.setOnKeyPressed(createHandlerOnPressed());
+        group.setOnKeyReleased(createHandlerOnReleased());
+        Group enemy = new Group();
+        for(int i = 0; i < 10; i++) {
+            c[i] = new Rectangle(20, 20);
+            c[i].setX(100-(20*i));
+            c[i].setY(240);
+            group.getChildren().add(c[i]);
+        }
+        group.getChildren().add(centipedeGun());
         timeline.play();
         return centipede;
     } //centipede
 
+    public Rectangle centipedeGun() {
+        bullet = new Rectangle(5, 10);
+        bullet.setX(-5);
+        return bullet;
+    }
 } // ArcadeApp
