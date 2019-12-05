@@ -38,3 +38,11 @@ that the Markdown is transformed into nice looking HTML.
 2. **TODO:** Setup the "game" aspects of the game such as levels or score, and add in assets.
 
 3. **PROB:** Trying to figure out what parts of javafx to use and where was difficult. I wasn't sure how to do the core gameplay loop until I realized I should use the Timeline class.
+
+## Tuesday 2019-04-12 @ 11:55 PM EST
+
+1. **DONE:** made A lot of progress on the centipede game in terms of gameplay and a lot of setup for the scene and menu as well.
+
+2. **TODO:** Finish Centipede, start othello and get the menu setup properly
+
+3. **PROB:** When doing the controls, I didn't understand how to make the game register how to accept multiple inputs at the same time. I got help and realized that if I use variables to check if a button is being pressed or not, it allows for multiple inputs at the same time, which made a lot of aspects of the game a lot better.
