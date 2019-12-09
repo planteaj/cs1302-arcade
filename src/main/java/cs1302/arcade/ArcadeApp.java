@@ -38,11 +38,14 @@ public class ArcadeApp extends Application {
 
     // main menu variables
     VBox vBox;
+    VBox cvBox;
+    VBox rvBox;
     HBox cContainer;
-    Hox rContainer;
+    HBox rContainer;
     Scene menuScene;
-    Scene cScene = centipede();
+    Scene cScene;
     Scene rScene;
+
     Menu menu;
     MenuItem exit;
     MenuBar menuBar;
@@ -271,15 +274,16 @@ public class ArcadeApp extends Application {
     @Override
     public void start(Stage stage) {
         this.stage = stage;
-        vBox = new vBox();
+        vBox = new VBox();
+        rvBox = new VBox();
         cContainer = new HBox();
-        rContainer = new Hbox();
+        rContainer = new HBox();
         menuScene = new Scene(vBox, 640, 480);
-        cScene = new Scene(640, 480);
-        rScene = new Scene(640, 480);
+        cScene = centipede();
+        rScene = new Scene(rvBox, 640, 480);
         menu = new Menu("File");
         exit = new MenuItem("Exit");
-        menuBar = new menuBar();
+        menuBar = new MenuBar();
         cButton = new Button("Centipede");
         rButton = new Button("Reversi");
         cInstructions = new TextField("Fill in later");
@@ -294,6 +298,11 @@ public class ArcadeApp extends Application {
 
         // generate events
         menu.setOnAction(exitApp);
+        stage.setTitle("Game Launcher");
+        stage.setScene(menuScene);
+        stage.sizeToScene();
+        stage.show();
+
         cButton.setOnAction(startCentipede);
         rButton.setOnAction(startReversi);
         //      Scene scene = new Scene(group, 640, 480);
