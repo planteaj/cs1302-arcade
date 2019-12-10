@@ -71,8 +71,8 @@ public class Sprite
         return s.getBoundary().intersects( this.getBoundary() );
     }
     public boolean intersects(double x, double y) {
-        Rectangle2D temp = new Rectangle2D(x,y,1,1);
-        return this.getBoundary().intersects(temp);
+        Rectangle2D temp = new Rectangle2D(x,y,20,20);
+        return temp.intersects(this.getBoundary());
     }
 
 }
