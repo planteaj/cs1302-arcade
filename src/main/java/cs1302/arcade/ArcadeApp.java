@@ -1,11 +1,14 @@
 package cs1302.arcade;
-
 import java.util.Random;
 
+import java.lang.Thread;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.paint.*;
+import javafx.scene.canvas.*;
 import javafx.scene.shape.Rectangle;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
@@ -33,8 +36,9 @@ public class ArcadeApp extends Application {
 
     Group group = new Group();           // main container
     Random rng = new Random();           // random number generator
-    Rectangle r = new Rectangle(20, 20); // some rectangle
-
+    Sprite r = new Sprite(); // some rectangle
+    final Canvas canvas = new Canvas(1280, 720);
+    GraphicsContext gc = canvas.getGraphicsContext2D();
 
     // main menu variables
     VBox vBox;
@@ -45,7 +49,6 @@ public class ArcadeApp extends Application {
     Scene menuScene;
     Scene cScene;
     Scene rScene;
-
     Menu menu;
     MenuItem exit;
     MenuBar menuBar;
@@ -59,7 +62,6 @@ public class ArcadeApp extends Application {
 
     Rectangle e = new Rectangle(20, 20); // temp enemy rectangel
     boolean daemon = true;
-    boolean rightE = true;
     boolean upE = false;
     boolean movingBullet = false;
     boolean upPressed = false;
@@ -75,8 +77,10 @@ public class ArcadeApp extends Application {
 
     int eSpeed = 4;
     int eDown = 20;
-    Rectangle[] c = new Rectangle[10];
-    Rectangle bullet = new Rectangle();
+    ArrayList<Sprite> centipedes = new ArrayList<Sprite>();
+    ArrayList<Boolean> rightE = new ArrayList<Boolean>();
+    Sprite bullet = new Sprite();
+
     final Timeline timeline = gamePlayLoop();
 
     /**
@@ -87,8 +91,8 @@ public class ArcadeApp extends Application {
     private EventHandler<? super MouseEvent> createMouseHandler() {
         return event -> {
             System.out.println(event);
-            r.setX(rng.nextDouble() * (640 - r.getWidth()));
-            r.setY(rng.nextDouble() * (480 - r.getHeight()));
+//            r.setX(rng.nextDouble() * (640 - r.getWidth()));
+//            r.setY(rng.nextDouble() * (480 - r.getHeight()));
         };
     } // createMouseHandler
 
@@ -99,42 +103,12 @@ public class ArcadeApp extends Application {
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                                                new EventHandler<ActionEvent>() {
                                                    public void handle(ActionEvent event) {
-               for(int i = 0; i < c.length; i++) {
-                   if(i == c.length - 1) {
-                       c[i].setX(e.getX());
-                       c[i].setY(e.getY());
-                   } else {
-                       c[i].setY(c[i+1].getY());
-                       c[i].setX(c[i+1].getX());
-                   }
-               }
-                   if(!upE && e.getX() > 620) {
-                       e.setY(e.getY() + eDown);
-                       rightE = false;
-                   } else if(!upE && e.getX() <= 0.0) {
-                       e.setY(e.getY() + eDown);
-                       rightE = true;
-                   }
-                   if(rightE) {
-                       e.setX(e.getX() + eSpeed);
-                   } else {
-                       e.setX(e.getX() - eSpeed);
-                   } //else
-                   System.out.println("x value: " + bullet.getX());
-                   System.out.println("Y value: " + bullet.getY());
-                   if(e.getY()  > 440){
-                       upE = true;
-                   }
-                   if(upE && e.getY() < 380) {
-                       upE = false;
-                   }
-                   if(upE == true && e.getX() > 600) {
-                       e.setY(e.getY() - eDown);
-                       rightE = false;
-                   } else if(upE && e.getX() <= 0.0) {
-                       e.setY(e.getY() - eDown);
-                       rightE = true;
-                   }
+                                                       gc.clearRect(0, 0, 1280, 720);
+                                                       r.render(gc);
+               for(int i = 0; i < 10; i++) {
+                   centipedes.get(i).render(gc);
+                      }
+               centipedeMovement();
 
                    if(leftPressed == true) {
                        if(r.getX() <= 0 ) {
@@ -166,9 +140,10 @@ public class ArcadeApp extends Application {
                        } else {
                            r.setY(r.getY() + 10);
                        }
-                   }//if
+                   } //if
 
                    if(bullet.getY() >= -5){
+                       bullet.render(gc);
                        bullet.setY(bullet.getY()-5);
                        movingBullet = true;
                    } else {
@@ -268,7 +243,7 @@ public class ArcadeApp extends Application {
                 stage.sizeToScene();
                 stage.show();
             }
-        };
+       };
 
     /** {@inheritDoc} */
     @Override
@@ -320,24 +295,59 @@ public class ArcadeApp extends Application {
         Scene centipede = new Scene(group, 640, 480);
         r.setX(320);
         r.setY(460);
-        group.getChildren().addAll(r, e);                // add to main container
+
         group.setOnKeyPressed(createHandlerOnPressed());
         group.setOnKeyReleased(createHandlerOnReleased());
         Group enemy = new Group();
+
         for(int i = 0; i < 10; i++) {
-            c[i] = new Rectangle(20, 20);
-            c[i].setX(100-(20*i));
-            c[i].setY(240);
-            group.getChildren().add(c[i]);
+            centipedes.add(i, new Sprite());
+            centipedes.get(i).setImage("file:resources/recentipede.jpg",20 ,20);
+            centipedes.get(i).setX(0 + (i * 20));
+            centipedes.get(i).setY(20);
+            rightE.add(i, true);
         }
-        group.getChildren().add(centipedeGun());
+        centipedeGun();
+        group.getChildren().add(canvas);
         timeline.play();
         return centipede;
     } //centipede
 
-    public Rectangle centipedeGun() {
-        bullet = new Rectangle(5, 10);
+    public void centipedeGun() {
+        bullet = new Sprite();
+        bullet.setImage("file:resources/bullet.png", 10, 20);
         bullet.setX(-5);
-        return bullet;
+
+        r.setImage("file:resources/recentipede.jpg", 20, 20);
+    }
+
+    public void centipedeMovement() {
+        for(int i = 9; i >= 0; i-- ) {
+            if(!upE && centipedes.get(i).getX() > 620) {
+                centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
+                rightE.set(i, false);
+            } else if(!upE && centipedes.get(i).getX() <= 0.0) {
+                centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
+                rightE.set(i,true);
+            }
+            if(rightE.get(i)) {
+                centipedes.get(i).setX(centipedes.get(i).getX() + eSpeed);
+            } else {
+                centipedes.get(i).setX(centipedes.get(i).getX() - eSpeed);
+            } //else
+            if(centipedes.get(i).getY()  > 440){
+                upE = true;
+            }
+            if(upE && centipedes.get(i).getY() < 380) {
+                upE = false;
+            }
+            if(upE == true && centipedes.get(i).getX() > 600) {
+                centipedes.get(i).setY(centipedes.get(i).getY() - eDown);
+                rightE.set(i, false);
+            } else if(upE && centipedes.get(i).getX() <= 0.0) {
+                centipedes.get(i).setY(centipedes.get(i).getY() - eDown);
+                rightE.set(i, true);
+            }
+        }
     }
 } // ArcadeApp

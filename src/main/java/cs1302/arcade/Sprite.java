@@ -1,3 +1,4 @@
+package cs1302.arcade;
 import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Rectangle2D;
@@ -32,29 +33,27 @@ public class Sprite
         Image i = new Image(filename);
         setImage(i);
     }
+    public void setImage(String filename, int width, int height){
+        Image i = new Image(filename, width, height, false, false);
+        setImage(i);
+    }
 
-    public void setPosition(double x, double y)
+    public void setX(double x)
     {
         positionX = x;
-        positionY = y;
     }
 
-    public void setVelocity(double x, double y)
-    {
-        velocityX = x;
-        velocityY = y;
+    public void setY(double y)
+        {
+            positionY = y;
+        }
+
+    public double getX(){
+        return positionX;
     }
 
-    public void addVelocity(double x, double y)
-    {
-        velocityX += x;
-        velocityY += y;
-    }
-
-    public void update(double time)
-    {
-        positionX += velocityX * time;
-        positionY += velocityY * time;
+    public double getY() {
+        return positionY;
     }
 
     public void render(GraphicsContext gc)
@@ -72,9 +71,4 @@ public class Sprite
         return s.getBoundary().intersects( this.getBoundary() );
     }
 
-    public String toString()
-    {
-        return " Position: [" + positionX + "," + positionY + "]"
-        + " Velocity: [" + velocityX + "," + velocityY + "]";
-    }
 }
