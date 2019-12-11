@@ -71,6 +71,7 @@ public class ArcadeApp extends Application {
     Rectangle e = new Rectangle(20, 20); // temp enemy rectangel
     boolean daemon = true;
     boolean upE = false;
+    boolean moveC = false;
     boolean movingBullet = false;
     boolean upPressed = false;
     boolean downPressed = false;
@@ -248,7 +249,7 @@ public class ArcadeApp extends Application {
                         gc.strokeText("Level: " + cLevel, 320, 240, 10000);
                         levelC.play();
                     } //if
-                    if (cLevel >3)
+                    if (cLevel > 4)
                     {
                         gc.clearRect(0, 0, 640, 480);
                         gc.strokeText(" You Win!", 320,  240, 10000);
@@ -491,20 +492,27 @@ public class ArcadeApp extends Application {
                     centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
 
                 }
-                if(rightE.get(i) && centipedes.get(i).intersects(mushroom.get(j))) {
+                if(rightE.get(i) && centipedes.get(i).intersects(mushroom.get(j))&& !moveC && i != centipedes.size()-1 && !centipedes.get(i).intersects(centipedes.get(i+1))) {
                     rightE.set(i, false);
                     centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
-                   } else if (!rightE.get(i)&& centipedes.get(i).intersects(mushroom.get(j))) {
+                    moveC = true;
+                        } else if (rightE.get(i) && centipedes.get(i).intersects(mushroom.get(j)) && !moveC){
+                            rightE.set(i, false);
+                            centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
+                        } else if (!rightE.get(i)&& centipedes.get(i).intersects(mushroom.get(j)) && !moveC) {
 
                     rightE.set(i,true);
                     centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
-
+                    moveC = true;
                 }
+
 
                 if(rightE.get(i)) {
                     centipedes.get(i).setX(centipedes.get(i).getX() + eSpeed);
+                    moveC = false;
                 } else {
                     centipedes.get(i).setX(centipedes.get(i).getX() - eSpeed);
+                    moveC = false;
                 } //else
                 if(centipedes.get(i).getY()  > 440){
                     upE = true;
