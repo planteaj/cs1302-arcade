@@ -28,7 +28,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
-
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+import javafx.scene.shape.Circle;
 /**
  * Application subclass for {@code ArcadeApp}.
  * @version 2019.fa
@@ -95,8 +97,10 @@ public class ArcadeApp extends Application {
     final Timeline rTimeline = rGamePlayLoop();
 
     //reversi variables
+    GridPane rGrid = new GridPane();
     int boardSize = 8;
-    Boolean[][] othelloBoard = new Boolean[boardSize][boardSize];
+    //Boolean[][] othelloBoard = new Boolean[boardSize][boardSize];
+    String[][] othelloBoard = new String[boardSize][boardSize];
     Sprite[][] othelloPieces = new Sprite[boardSize][boardSize];
     Group rGroup = new Group();;
     Double mouseX = 0.0;
@@ -386,7 +390,8 @@ public class ArcadeApp extends Application {
         rGroup.setOnMousePressed(createMouseHandler());
         rGroup.setOnMouseReleased(createReleaseMouseHandler());
         othelloPieces();
-        rGroup.getChildren().add(reversiCanvas);
+        rGrid.setGridLinesVisible(true);
+        rGroup.getChildren().add(reversiCanvas, rGrid);
         rTimeline.play();
         return reversi;
     } //reversi
@@ -394,12 +399,30 @@ public class ArcadeApp extends Application {
     public void othelloPieces() {
         for(int i = 0; i < boardSize; i++) {
             for(int j = 0; j < boardSize; j ++) {
+                if (i == 3 && j == 3) {
+                    rGrid.add(new Circle(40.0, new Color(0.0, 0.0, 0.0, 1.0)), 3, 3);
+                } else if (i == 3 && j == 4) {
+                    rGrid.add(new Circle(40.0, new Color(255, 255, 255, 1.0)), 4, 3);
+                } else if (i == 4 && j == 3) {
+                    rGrid.add(new Circle(40.0, new Color(255, 255, 255, 1.0)), 3, 4);
+                } else if (i == 4 && j == 4) {
+                    rGrid.add(new Circle(40.0, new Color(0.0, 0.0, 0.0, 1.0)), 4, 4);
+                } else {
+                    rGrid.add(new Text(""), j, i);
+                }
+                othelloBoard[i][j] = "e";
+                /*
                 othelloPieces[i][j] = new Sprite();
                 othelloPieces[i][j].setImage("file:resources/bullet.png", 40, 40);
                 othelloPieces[i][j].setX(0+(i*40));
                 othelloPieces[i][j].setY(0+(j*40));
+                */
             } //for
         } //for
+        othelloBoard[3][3] = "b";
+        othelloBoard[3][4] = "w";
+        othelloBoard[4][3] = "w";
+        othelloBoard[4][4] = "b";
     }
 
     private Scene centipede() {
