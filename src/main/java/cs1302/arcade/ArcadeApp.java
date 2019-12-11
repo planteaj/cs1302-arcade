@@ -135,7 +135,7 @@ public class ArcadeApp extends Application {
                 public void handle(ActionEvent event) {
                     for(int i = 0; i < boardSize; i ++) {
                         for(int j = 0; j < boardSize; j++) {
-                                othelloPieces[i][j].render(rGc);
+                            //othelloPieces[i][j].render(rGc);
                             if(othelloPieces[i][j].intersects(mouseX, mouseY) && mouseClicked)
                             {
                                 System.out.println("true");
@@ -429,7 +429,7 @@ public class ArcadeApp extends Application {
         rGroup.setOnMouseReleased(createReleaseMouseHandler());
         othelloPieces();
         rGrid.setGridLinesVisible(true);
-        rGroup.getChildren().add(reversiCanvas, rGrid);
+        rGroup.getChildren().addAll(reversiCanvas, rGrid);
         rTimeline.play();
         return reversi;
     } //reversi
@@ -440,9 +440,9 @@ public class ArcadeApp extends Application {
                 if (i == 3 && j == 3) {
                     rGrid.add(new Circle(40.0, new Color(0.0, 0.0, 0.0, 1.0)), 3, 3);
                 } else if (i == 3 && j == 4) {
-                    rGrid.add(new Circle(40.0, new Color(255, 255, 255, 1.0)), 4, 3);
+                    rGrid.add(new Circle(40.0, new Color(.255, .255, .255, 1.0)), 4, 3);
                 } else if (i == 4 && j == 3) {
-                    rGrid.add(new Circle(40.0, new Color(255, 255, 255, 1.0)), 3, 4);
+                    rGrid.add(new Circle(40.0, new Color(.255, .255, .255, 1.0)), 3, 4);
                 } else if (i == 4 && j == 4) {
                     rGrid.add(new Circle(40.0, new Color(0.0, 0.0, 0.0, 1.0)), 4, 4);
                 } else {
