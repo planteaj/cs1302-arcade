@@ -1,4 +1,4 @@
-package cs1302.arcade;
+ package cs1302.arcade;
 import java.util.Random;
 
 import java.lang.Thread;
@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
+import javafx.animation.Transition;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
@@ -27,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -57,8 +59,8 @@ public class ArcadeApp extends Application {
     MenuBar menuBar;
     Button cButton; // centipede start
     Button rButton; // reversi start
-    TextField cInstructions;
-    TextField rInstructions;
+    Text cInstructions;
+    Text rInstructions;
     Label cScoreLabel;
     int cScore;
     String cScoreText;
@@ -82,7 +84,7 @@ public class ArcadeApp extends Application {
     boolean spaceReleased = false;
     int width = 640;
     int height = 480;
-    double eSpeed = .05;
+    double eSpeed = .02;
     int eDown = 20;
     int centipedeNum = 10;
     ArrayList<Sprite> centipedes = new ArrayList<Sprite>();
@@ -91,9 +93,10 @@ public class ArcadeApp extends Application {
     Sprite bullet = new Sprite();
     int cLives = 3;
     int cLevel = 1;
-    final Timeline timeline = gamePlayLoop();
-    final Timeline rTimeline = rGamePlayLoop();
-
+    Timeline timeline = new Timeline();
+    Timeline rTimeline = rGamePlayLoop();
+    Timeline levelC = new Timeline();
+    Timeline winC = new Timeline();
     //reversi variables
     int boardSize = 8;
     Boolean[][] othelloBoard = new Boolean[boardSize][boardSize];
@@ -142,113 +145,133 @@ public class ArcadeApp extends Application {
     } //rGamePlayLoop
 
 
-    private Timeline gamePlayLoop() {
+    private void gamePlayLoop() {
 
         final Duration oneFrameAmt = Duration.millis(1000/60);
-        final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
-        new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                gc.clearRect(0, 0, 640, 480);
-                r.render(gc);
-                for(int i = 0; i < centipedes.size(); i++) {
-                    centipedes.get(i).render(gc);
-                }
-                centipedeMovement();
+        KeyFrame winScreen = new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event) {
 
-                for(int i = 0; i < mushroom.size(); i++) {
-                    mushroom.get(i).render(gc);
+                    stage.setScene(menuScene);
                 }
+            });
+        KeyFrame LevelScreen = new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event) {
+                    timeline.pause();
+                    cLevel++;
+                    eSpeed += .05;
+                    centipedeNum += 2;
+                    centipedeCreation();
+                    mushrooms();
+                    timeline.play();
+                }
+            });
+        final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event) {
+                    gc.clearRect(0, 0, 640, 480);
+                    r.render(gc);
+                    for (int i = 0; i < centipedes.size(); i++) {
+                        centipedes.get(i).render(gc);
+                    }
+                    centipedeMovement();
 
-                if(leftPressed == true) {
-                    if(r.getX() <= 0 ) {
-                        r.setX(0.0);
+                    for (int i = 0; i < mushroom.size(); i++) {
+                        mushroom.get(i).render(gc);
+                    }
+
+                    if (leftPressed == true) {
+                        if (r.getX() <= 0 ) {
+                            r.setX(0.0);
+                        } else {
+                            r.setX(r.getX() - 5.0);
+                        } //else
+                    } // if
+
+                    if (rightPressed == true) {
+                        if (r.getX() > 600) {
+                            r.setX(620);
+                        } else {
+                            r.setX(r.getX() + 5.0);
+                        } //else
+                    } //if
+
+                    if (upPressed == true) {
+                        if (r.getY() < 380) {
+                            r.setY(360);
+                        } else {
+                            r.setY(r.getY() - 5.0);
+                        }
+                    } //if
+
+                    if (downPressed == true) {
+                        if (r.getY() > 440) {
+                            r.setY(460);
+                        } else {
+                            r.setY(r.getY() + 5.0);
+                        }
+                    } //if
+
+                    if (bullet.getY() >= -5){
+                        bullet.render(gc);
+                        bullet.setY(bullet.getY()-10);
+                        movingBullet = true;
                     } else {
-                        r.setX(r.getX() - 5.0);
-                    } //else
-                } // if
+                        movingBullet = false;
+                    }
 
-                if(rightPressed == true) {
-                    if(r.getX() > 600) {
-                        r.setX(620);
-                       } else {
-                           r.setX(r.getX() + 5.0);
-                       } //else
-                   } //if
+                    if (spacePressed && movingBullet == false) {
+                        bullet.setX(r.getX());
+                        bullet.setY(r.getY());
+                    } //if
+                    for (int i = 0; i < mushroom.size(); i++) {
+                        if (bullet.intersects(mushroom.get(i))) {
+                            bullet.setY(-5);
+                            mushroom.remove(i);
+                            cScore += 5;
+                        } //if
+                    } //for
+                    for (int i = 0; i < centipedes.size(); i++) {
+                        if (bullet.intersects(centipedes.get(i)) && centipedes.size() > 0){
+                            bullet.setY(-5);
+                            createMushroom(mushroom.size(),centipedes.get(i).getX(),centipedes.get(i).getY());
+                            centipedes.remove(i);
 
-                   if(upPressed == true) {
-                       if(r.getY() < 380) {
-                           r.setY(360);
-                       } else {
-                           r.setY(r.getY() - 5.0);
-                       }
-                   } //if
+                            cScore += 25;
+                        } //if
+                        if (r.intersects(centipedes.get(i))){
+                            cLives--;
+                            centipedeCreation();
+                        } //if
+                    } //for
 
-                   if(downPressed == true) {
-                       if(r.getY() > 440) {
-                           r.setY(460);
-                       } else {
-                           r.setY(r.getY() + 5.0);
-                       }
-                   } //if
+                    if (centipedes.size() == 0 && cLevel <= 3){
+                        gc.clearRect(0, 0, 640, 480);
+                        gc.strokeText("Level: " + cLevel, 320, 240, 10000);
+                        levelC.play();
+                    } //if
+                    if (cLevel >3)
+                    {
+                        gc.clearRect(0, 0, 640, 480);
+                        gc.strokeText(" You Win!", 320,  240, 10000);
+                        winC.play();
+                    }
+                    if (cLives == 0) {
+                        stage.setScene(menuScene);
+                        timeline.stop();
+                    } //if
 
-                   if(bullet.getY() >= -5){
-                       bullet.render(gc);
-                       bullet.setY(bullet.getY()-10);
-                       movingBullet = true;
-                   } else {
-                       movingBullet = false;
-                   }
+                    cScoreText = "Score: " + cScore;
+                    gc.fillText( cScoreText, 0, 20, 300);
+                    gc.strokeText(cScoreText, 0,  20, 300);
+                }
+            }); // oneFrame
 
-                   if(spacePressed && movingBullet == false) {
-                       bullet.setX(r.getX());
-                       bullet.setY(r.getY());
-                   } //if
-                   for(int i = 0; i < mushroom.size(); i++) {
-                       if(bullet.intersects(mushroom.get(i))) {
-                               bullet.setY(-5);
-                               mushroom.remove(i);
-                               cScore += 5;
-                       } //if
-                   } //for
-                   for(int i = 0; i < centipedes.size(); i++) {
-                       if(bullet.intersects(centipedes.get(i)) && centipedes.size() > 0){
-                           bullet.setY(-5);
-                           centipedes.remove(i);
-                           createMushroom(mushroom.size(),centipedes.get(i).getX(),centipedes.get(i).getY());
-                           cScore += 25;
-                       } //if
-                       if(r.intersects(centipedes.get(i))){
-                           cLives--;
-                           centipedeCreation();
-                       } //if
-                   } //for
-                   if(centipedes.size() == 0 && cLevel <= 3){
-                       centipedeLevel();
-                   } //if
-                   if(cLevel > 3) {
-                       gc.clearRect(0, 0, 640, 480);
-                       gc.strokeText(" You Win!", 320,  240, 10000);
-                       try {
-                           Thread.sleep(10000);
-                       } catch (InterruptedException ex) {
-                           return;
-                       }
-                       stage.setScene(menuScene);
-                   }
-                   if(cLives == 0) {
-                       timeline.stop();
-                       stage.setScene(menuScene);
-                   } //if
-
-                   cScoreText = "Score: " + cScore;
-                   gc.fillText( cScoreText, 0, 20);
-                   gc.strokeText(cScoreText, 0,  20);
-            }
-        }); // oneFrame
-        Timeline timeline = new Timeline();
+        levelC.getKeyFrames().add(LevelScreen);
+        levelC.setCycleCount(1);
+        winC.getKeyFrames().add(winScreen);
+        winC.setCycleCount(1);
+        timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(oneFrame);
-        return timeline;
     } //gameplayoop
     /**
      * Return a key event handler that moves to the rectangle to the left
@@ -284,7 +307,7 @@ public class ArcadeApp extends Application {
     } // createHandlerOnPressed
 
 
-        private EventHandler<? super KeyEvent> createHandlerOnReleased() {
+    private EventHandler<? super KeyEvent> createHandlerOnReleased() {
         return event -> {
             System.out.println(event);
             switch (event.getCode()) {
@@ -319,6 +342,9 @@ public class ArcadeApp extends Application {
             @Override
             public void handle(ActionEvent e) {
                 cScore = 0;
+                cLives = 3;
+                centipedeNum = 10;
+                eSpeed = .02;
                 centipedeCreation();
                 mushrooms();
                 stage.setScene(cScene);
@@ -353,8 +379,8 @@ public class ArcadeApp extends Application {
         menuBar = new MenuBar();
         cButton = new Button("Centipede");
         rButton = new Button("Reversi");
-        cInstructions = new TextField("Fill in later");
-        rInstructions = new TextField("Fill in later");
+        cInstructions = new Text("Centipede is a game in which you control a ship at the bottom of the screen\n with the arrow keys. You use the space bar to shoot the centipede who starts\n at the top of the screen and moves down. If the Centipede is hit, it splits into two\n centipedes and the part that was hit turns into a mushroom.\n The goal is to make it through the levels and rack up\n points without losing all three of your lives.");
+        rInstructions = new Text("Reversi is a strategy board game for two players,played on an 8×8 uncheckered\n board. Players take turns placing disks on the board with their assigned color facing\n up. During a play, any disks of the opponent's color that are in a straight line and\n bounded by the disk just placed and another disk of the current player's color are\n turned over to the current player's color. ");
 
         // add children to parents
         cContainer.getChildren().addAll(cButton, cInstructions);
@@ -404,6 +430,7 @@ public class ArcadeApp extends Application {
 
     private Scene centipede() {
         Scene centipede = new Scene(group, 640, 480);
+        gamePlayLoop();
         r.setX(320);
         r.setY(460);
         group.setOnKeyPressed(createHandlerOnPressed());
@@ -456,18 +483,22 @@ public class ArcadeApp extends Application {
         for(int i = centipedes.size()-1; i >= 0; i-- ) {
             for(int j = 0; j < mushroom.size(); j++) {
                 if(!upE && centipedes.get(i).getX() > 610) {
-                    centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
                     rightE.set(i, false);
-                } else if(!upE && centipedes.get(i).getX() <= 0.0) {
                     centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
+
+                } else if(!upE && centipedes.get(i).getX() <= 0.0) {
                     rightE.set(i,true);
+                    centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
+
                 }
                 if(rightE.get(i) && centipedes.get(i).intersects(mushroom.get(j))) {
-                    centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
                     rightE.set(i, false);
-                } else if (!rightE.get(i)&& centipedes.get(i).intersects(mushroom.get(j))) {
                     centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
+                   } else if (!rightE.get(i)&& centipedes.get(i).intersects(mushroom.get(j))) {
+
                     rightE.set(i,true);
+                    centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
+
                 }
 
                 if(rightE.get(i)) {
