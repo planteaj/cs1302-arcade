@@ -108,6 +108,7 @@ public class ArcadeApp extends Application {
     //Boolean[][] othelloBoard = new Boolean[boardSize][boardSize];
     String[][] othelloBoard = new String[boardSize][boardSize];
     Sprite[][] othelloPieces = new Sprite[boardSize][boardSize];
+    Disk[][] boardPieces = new Disk[boardSize][boardSize];
     Group rGroup = new Group();;
     Double mouseX = 0.0;
     Double mouseY = 0.0;
@@ -458,6 +459,7 @@ public class ArcadeApp extends Application {
                     //disk.setOnMousePressed(playOthello); //need to define function playOthello
                     rGrid.add(disk, j, i);
                 }
+                boardPieces[i][j] = disk;
                 othelloBoard[i][j] = "w";
                 /*
                 othelloPieces[i][j] = new Sprite();
