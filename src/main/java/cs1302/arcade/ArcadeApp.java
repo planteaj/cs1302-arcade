@@ -33,6 +33,7 @@ import javafx.util.Duration;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Circle;
+import javafx.scene.layout.Priority;
 /**
  * Application subclass for {@code ArcadeApp}.
  * @version 2019.fa
@@ -424,12 +425,14 @@ public class ArcadeApp extends Application {
         t.start();
                        } // runOnNewThread
     private Scene reversi() {
-        Scene reversi = new Scene(rGroup, 640, 480);
+        rvBox = new VBox();
+        Scene reversi = new Scene(rvBox, 640, 480); //rGroup
         rGroup.setOnMousePressed(createMouseHandler());
         rGroup.setOnMouseReleased(createReleaseMouseHandler());
         othelloPieces();
         rGrid.setGridLinesVisible(true);
-        rGroup.getChildren().addAll(reversiCanvas, rGrid);
+        rvBox.getChildren().add(rGrid); //reversiCanvas
+        VBox.setVgrow(rGrid, Priority.ALWAYS);
         rTimeline.play();
         return reversi;
     } //reversi
@@ -437,18 +440,25 @@ public class ArcadeApp extends Application {
     public void othelloPieces() {
         for(int i = 0; i < boardSize; i++) {
             for(int j = 0; j < boardSize; j ++) {
+                Disk disk;
                 if (i == 3 && j == 3) {
-                    rGrid.add(new Circle(40.0, new Color(0.0, 0.0, 0.0, 1.0)), 3, 3);
+                    disk = new Disk(10.0, Paint.valueOf("blue"), 3, 3, "blue");
+                    rGrid.add(disk, 3, 3);
                 } else if (i == 3 && j == 4) {
-                    rGrid.add(new Circle(40.0, new Color(.255, .255, .255, 1.0)), 4, 3);
+                    disk = new Disk(10.0, Paint.valueOf("red"), 3, 4, "red");
+                    rGrid.add(disk, 4, 3);
                 } else if (i == 4 && j == 3) {
-                    rGrid.add(new Circle(40.0, new Color(.255, .255, .255, 1.0)), 3, 4);
+                    disk = new Disk(10.0, Paint.valueOf("red"), 4, 3, "red");
+                    rGrid.add(disk, 3, 4);
                 } else if (i == 4 && j == 4) {
-                    rGrid.add(new Circle(40.0, new Color(0.0, 0.0, 0.0, 1.0)), 4, 4);
+                    disk = new Disk(10.0, Paint.valueOf("blue"), 4, 4, "blue");
+                    rGrid.add(disk, 4, 4);
                 } else {
-                    rGrid.add(new Text(""), j, i);
+                    disk = new Disk(10.0, Paint.valueOf("white"), i, j, "white");
+                    //disk.setOnMousePressed(playOthello); //need to define function playOthello
+                    rGrid.add(disk, j, i);
                 }
-                othelloBoard[i][j] = "e";
+                othelloBoard[i][j] = "w";
                 /*
                 othelloPieces[i][j] = new Sprite();
                 othelloPieces[i][j].setImage("file:resources/bullet.png", 40, 40);
@@ -458,8 +468,8 @@ public class ArcadeApp extends Application {
             } //for
         } //for
         othelloBoard[3][3] = "b";
-        othelloBoard[3][4] = "w";
-        othelloBoard[4][3] = "w";
+        othelloBoard[3][4] = "r";
+        othelloBoard[4][3] = "r";
         othelloBoard[4][4] = "b";
     }
 
