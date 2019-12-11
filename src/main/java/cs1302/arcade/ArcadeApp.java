@@ -82,13 +82,15 @@ public class ArcadeApp extends Application {
     boolean spaceReleased = false;
     int width = 640;
     int height = 480;
-    double eSpeed = .1;
+    double eSpeed = .05;
     int eDown = 20;
+    int centipedeNum = 10;
     ArrayList<Sprite> centipedes = new ArrayList<Sprite>();
     ArrayList<Boolean> rightE = new ArrayList<Boolean>();
     ArrayList<Sprite> mushroom = new ArrayList<Sprite>();
     Sprite bullet = new Sprite();
     int cLives = 3;
+    int cLevel = 1;
     final Timeline timeline = gamePlayLoop();
     final Timeline rTimeline = rGamePlayLoop();
 
@@ -161,7 +163,7 @@ public class ArcadeApp extends Application {
                     if(r.getX() <= 0 ) {
                         r.setX(0.0);
                     } else {
-                        r.setX(r.getX() - 10.0);
+                        r.setX(r.getX() - 5.0);
                     } //else
                 } // if
 
@@ -169,7 +171,7 @@ public class ArcadeApp extends Application {
                     if(r.getX() > 600) {
                         r.setX(620);
                        } else {
-                           r.setX(r.getX() + 10.0);
+                           r.setX(r.getX() + 5.0);
                        } //else
                    } //if
 
@@ -177,7 +179,7 @@ public class ArcadeApp extends Application {
                        if(r.getY() < 380) {
                            r.setY(360);
                        } else {
-                           r.setY(r.getY() - 10);
+                           r.setY(r.getY() - 5.0);
                        }
                    } //if
 
@@ -185,13 +187,13 @@ public class ArcadeApp extends Application {
                        if(r.getY() > 440) {
                            r.setY(460);
                        } else {
-                           r.setY(r.getY() + 10);
+                           r.setY(r.getY() + 5.0);
                        }
                    } //if
 
                    if(bullet.getY() >= -5){
                        bullet.render(gc);
-                       bullet.setY(bullet.getY()-5);
+                       bullet.setY(bullet.getY()-10);
                        movingBullet = true;
                    } else {
                        movingBullet = false;
@@ -206,43 +208,48 @@ public class ArcadeApp extends Application {
                                bullet.setY(-5);
                                mushroom.remove(i);
                                cScore += 5;
-                           }
-                   }
+                       } //if
+                   } //for
                    for(int i = 0; i < centipedes.size(); i++) {
-                       if(bullet.intersects(centipedes.get(i)) && centipedes.get(i+1) == null){
-                           centipedes.set(i, centipedes.get(i+1));
-                           createMushroom(mushroom.size(),centipedes.get(i).getX(),centipedes.get(i).getY());
+                       if(bullet.intersects(centipedes.get(i)) && centipedes.size() > 0){
                            bullet.setY(-5);
-                           cScore += 10;
-                       } else if(bullet.intersects(centipedes.get(i))){
-                               centipedes.remove(i);
-                               createMushroom(mushroom.size()
-                                              ,centipedes.get(i).getX(),centipedes.get(i).getY());
-                               bullet.setY(-5);
-                               cScore += 10;
-                           }
+                           centipedes.remove(i);
+                           createMushroom(mushroom.size(),centipedes.get(i).getX(),centipedes.get(i).getY());
+                           cScore += 25;
+                       } //if
                        if(r.intersects(centipedes.get(i))){
                            cLives--;
                            centipedeCreation();
-
+                       } //if
+                   } //for
+                   if(centipedes.size() == 0 && cLevel <= 3){
+                       centipedeLevel();
+                   } //if
+                   if(cLevel > 3) {
+                       gc.clearRect(0, 0, 640, 480);
+                       gc.strokeText(" You Win!", 320,  240, 10000);
+                       try {
+                           Thread.sleep(10000);
+                       } catch (InterruptedException ex) {
+                           return;
                        }
+                       stage.setScene(menuScene);
                    }
                    if(cLives == 0) {
                        timeline.stop();
                        stage.setScene(menuScene);
-                   }
-
+                   } //if
 
                    cScoreText = "Score: " + cScore;
                    gc.fillText( cScoreText, 0, 20);
                    gc.strokeText(cScoreText, 0,  20);
             }
-                                               }); // oneFrame
+        }); // oneFrame
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(oneFrame);
         return timeline;
-    } //
+    } //gameplayoop
     /**
      * Return a key event handler that moves to the rectangle to the left
      * or the right depending on what key event is generated by the associated
@@ -311,7 +318,9 @@ public class ArcadeApp extends Application {
     private EventHandler<ActionEvent> startCentipede = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-
+                cScore = 0;
+                centipedeCreation();
+                mushrooms();
                 stage.setScene(cScene);
                 stage.sizeToScene();
                 stage.show();
@@ -407,21 +416,36 @@ public class ArcadeApp extends Application {
         return centipede;
     } //centipede
 
+    public void centipedeLevel() {
+        timeline.pause();
+        cLevel++;
+        eSpeed += .05;
+        centipedeNum += 2;
+        gc.clearRect(0, 0, 640, 480);
+        centipedeCreation();
+        mushrooms();
+        gc.strokeText("Level: " + cLevel, 320, 240, 10000);
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException ex) {
+            return;
+        }
+        timeline.play();
+    }
     public void centipedeGun() {
         bullet = new Sprite();
-        bullet.setImage("file:resources/bullet.png", 10, 20);
+        bullet.setImage("file:resources/bullet.png", 15, 20);
         bullet.setX(-5);
-
         r.setImage("file:resources/recentipede.jpg", 20, 20);
     }
     public void centipedeCreation() {
         timeline.pause();
-        centipedes = new ArrayList<Sprite>();
-        for(int i = 0; i < 10; i++) {
+        centipedes.clear();
+        for(int i = 0; i < centipedeNum; i++) {
             centipedes.add(i, new Sprite());
             centipedes.get(i).setImage("file:resources/recentipede.jpg",20 ,20);
-            centipedes.get(i).setX(0 + (i * 20));
-            centipedes.get(i).setY(0);
+            centipedes.get(i).setX(100 + (i * 20));
+            centipedes.get(i).setY(20);
             rightE.add(i, true);
 
         } //for
@@ -431,7 +455,7 @@ public class ArcadeApp extends Application {
     public void centipedeMovement() {
         for(int i = centipedes.size()-1; i >= 0; i-- ) {
             for(int j = 0; j < mushroom.size(); j++) {
-                if(!upE && centipedes.get(i).getX() > 620) {
+                if(!upE && centipedes.get(i).getX() > 610) {
                     centipedes.get(i).setY(centipedes.get(i).getY() + eDown);
                     rightE.set(i, false);
                 } else if(!upE && centipedes.get(i).getX() <= 0.0) {
@@ -469,6 +493,7 @@ public class ArcadeApp extends Application {
     }
     public void mushrooms() {
         double rand = 0;
+        mushroom.clear();
         int position = 0;
         for (int i = 0; i < 32; i++) {
             for (int j = 2; j < 18; j++) {
