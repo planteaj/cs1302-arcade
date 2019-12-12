@@ -606,7 +606,7 @@ public class ArcadeApp extends Application {
 
     public void createMushroom(int i , double x, double y) {
         mushroom.add(i, new Sprite());
-        mushroom.get(i).setImage("file:resources/bullet.png",20 ,20);
+        mushroom.get(i).setImage("file:resources/Mushroom.jpg",20 ,20);
         mushroom.get(i).setX(0 + x);
         mushroom.get(i).setY(10 + y);
     }
