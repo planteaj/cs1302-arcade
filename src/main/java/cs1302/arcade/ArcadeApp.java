@@ -398,10 +398,10 @@ public class ArcadeApp extends Application {
                     return;
                 } else {
                     if (checkRow(disk) != -1) {
-
+                        int rowChange = checkRow(disk);
                     }
                     if (checkCol(disk) != -1) {
-
+                        int colChange = checkCol(disk);
                     }
                     if (checkDiag(disk) != -1) {
 
