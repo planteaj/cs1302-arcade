@@ -108,7 +108,7 @@ public class ArcadeApp extends Application {
     int cLevel = 1;
     int mushS = mushroom.size();
     Timeline timeline = new Timeline();
-    Timeline rTimeline = rGamePlayLoop();
+    Timeline rTimeline = new Timeline();
     Timeline levelC = new Timeline();
     Timeline winC = new Timeline();
     final Duration oneFrameAmt = Duration.millis(1000 / 60);
@@ -143,24 +143,15 @@ public class ArcadeApp extends Application {
     }
 
 
-    private Timeline rGamePlayLoop() {
+    private void rGamePlayLoop() {
         Duration oneFrameAmt = Duration.millis(1000 / 60);
         final KeyFrame rFrame = new KeyFrame(oneFrameAmt, new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
-                    for (int i = 0; i < boardSize; i ++) {
-                        for (int j = 0; j < boardSize; j++) {
-                            //othelloPieces[i][j].render(rGc);
-                            if (othelloPieces[i][j].intersects(mouseX, mouseY) && mouseClicked) {
-                                System.out.println("true");
-                            } //if
-                        } //for
-                    } //for
                 } //handle
             }); // oneFrame
         Timeline rTimeline = new Timeline();
         rTimeline.setCycleCount(Animation.INDEFINITE);
         rTimeline.getKeyFrames().add(rFrame);
-        return rTimeline;
     } //rGamePlayLoop
 
     public void renderC() {
