@@ -485,6 +485,7 @@ public class ArcadeApp extends Application {
         rGrid.setGridLinesVisible(true);
         rvBox.getChildren().add(rGrid); //reversiCanvas
         VBox.setVgrow(rGrid, Priority.ALWAYS);
+        rGamePlayLoop();
         rTimeline.play();
         return reversi;
     } //reversi
