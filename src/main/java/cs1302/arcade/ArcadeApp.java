@@ -388,7 +388,7 @@ public class ArcadeApp extends Application {
     private EventHandler<MouseEvent> playReversi = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                Disk disk = e.getSource();
+                Disk disk = (Disk) e.getSource();
                 String color = getCurrentColor();
                 if (checkPiece(disk) == false) {
                     return;
@@ -567,6 +567,7 @@ public class ArcadeApp extends Application {
                 }
             }
         }
+        return result;
     }
 
     public int checkRow(Disk disk) {
