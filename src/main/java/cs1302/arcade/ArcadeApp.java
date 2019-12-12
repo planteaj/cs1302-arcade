@@ -541,7 +541,7 @@ public class ArcadeApp extends Application {
         int result = -1;
         int row = disk.getRow();
         int col = disk.getCol();
-        if (othelloBoard[row - 1][col].equals(disk.getColor()) == false) {
+        if (row != 0 && othelloBoard[row - 1][col].equals(disk.getColor()) == false) {
             for (int i = row - 1; i >= 0; i--) {
                 if (othelloBoard[i][col].equals("white")) {
                     break;
@@ -549,7 +549,7 @@ public class ArcadeApp extends Application {
                     result = i + 1;
                 }
             }
-        } else if (othelloBoard[row + 1][col].equals(disk.getColor()) == false) {
+        } else if (row != 7 && othelloBoard[row + 1][col].equals(disk.getColor()) == false) {
             for (int i = row + 1; i < 8; i++) {
                 if (othelloBoard[i][col].equals("white")) {
                     break;
@@ -565,7 +565,7 @@ public class ArcadeApp extends Application {
         int result = -1;
         int row = disk.getRow();
         int col = disk.getCol();
-        if (othelloBoard[row][col - 1].equals(disk.getColor()) == false) {
+        if ( col != 0 && othelloBoard[row][col - 1].equals(disk.getColor()) == false) {
             for (int j = col - 1; j >= 0; j--) {
                 if (othelloBoard[row][j].equals("white")) {
                     break;
@@ -573,7 +573,7 @@ public class ArcadeApp extends Application {
                     result = j + 1;
                 }
             }
-        } else if (othelloBoard[row][col + 1].equals(disk.getColor()) == false) {
+        } else if (col != 7 && othelloBoard[row][col + 1].equals(disk.getColor()) == false) {
             for (int j = col + 1; j < 8; j++) {
                 if (othelloBoard[row][j].equals("white")) {
                     break;
