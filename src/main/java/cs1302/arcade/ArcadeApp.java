@@ -119,12 +119,8 @@ public class ArcadeApp extends Application {
     String[][] othelloBoard = new String[boardSize][boardSize];
     Sprite[][] othelloPieces = new Sprite[boardSize][boardSize];
     Disk[][] boardPieces = new Disk[boardSize][boardSize];
-<<<<<<< HEAD
     String currentColor = "blue";
-    Group rGroup = new Group();;
-=======
     Group rGroup = new Group();
->>>>>>> e86f13ffb0c1df0f070d73acc668429633f234a3
     Double mouseX = 0.0;
     Double mouseY = 0.0;
     Boolean mouseClicked = false;    /**
@@ -389,7 +385,7 @@ public class ArcadeApp extends Application {
             }
         };
 
-    private EventHandler<? super MouseEvent> playReversi = new EventHandler<? super MouseEvent>() {
+    private EventHandler<MouseEvent> playReversi = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 Disk disk = e.getSource();
@@ -399,12 +395,43 @@ public class ArcadeApp extends Application {
                 } else {
                     if (checkRow(disk) != -1) {
                         int rowChange = checkRow(disk);
+                        if (rowChange < disk.getCol()) {
+                            for (int j = rowChange; j < disk.getCol(); j++) {
+                                othelloBoard[disk.getRow()][j] = color;
+                            }
+                        } else {
+                            for (int j = disk.getCol(); j < rowChange + 1; j++) {
+                                othelloBoard[disk.getRow()][j] = color;
+                            }
+                        }
                     }
                     if (checkCol(disk) != -1) {
                         int colChange = checkCol(disk);
+                        if (colChange < disk.getRow()) {
+                            for (int i = colChange; i < disk.getRow(); i++) {
+                                othelloBoard[i][disk.getCol()] = color;
+                            }
+                        } else {
+                            for (int i = disk.getRow(); i < colChange + 1; i++) {
+                                othelloBoard[i][disk.getCol()] = color;
+                            }
+                        }
                     }
+                    /*
                     if (checkDiag(disk) != -1) {
 
+                    }
+                    */
+                    for (int i = 0; i < boardSize; i++) {
+                        for (int j = 0; j < boardSize; j++) {
+                            boardPieces[i][j].setColor(othelloBoard[i][j]);
+                        }
+                    }
+                    updateBoard();
+                    if (color.equals("blue")) {
+                        setCurrentColor("red");
+                    } else {
+                        setCurrentColor("blue");
                     }
                 }
             }
@@ -489,12 +516,9 @@ public class ArcadeApp extends Application {
                     rGrid.add(disk, 4, 4);
                 } else {
                     disk = new Disk(10.0, Paint.valueOf("white"), i, j, "white");
-<<<<<<< HEAD
                     disk.setOnMousePressed(playReversi); //need to define function playOthello
-=======
-                    GridPane board = new GridPane();
+                    //GridPane board = new GridPane();
                     //disk.setOnMousePressed(playOthello); //need to define function playOthello
->>>>>>> e86f13ffb0c1df0f070d73acc668429633f234a3
                     rGrid.add(disk, j, i);
                 } //else
                 boardPieces[i][j] = disk;
@@ -507,12 +531,50 @@ public class ArcadeApp extends Application {
         othelloBoard[4][4] = "blue";
     } //othelloPieces
 
+
+    public void updateBoard() {
+        rGrid.getChildren().clear();
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                Disk disk = boardPieces[i][j];
+                if (disk.getColor().equals("white")) {
+                    disk.setOnMousePressed(playReversi);
+                }
+                rGrid.add(disk, j, i);
+            }
+        }
+        rGrid.setGridLinesVisible(true);
+    }
+
+    public int checkCol(Disk disk) {
+        int result = -1;
+        int row = disk.getRow();
+        int col = disk.getCol();
+        if (othelloBoard[row - 1][col].equals(disk.getColor()) == false) {
+            for (int i = row - 1; i >= 0; i--) {
+                if (othelloBoard[i][col].equals("white")) {
+                    break;
+                } else if (othelloBoard[i][col].equals(disk.getColor())) {
+                    result = i + 1;
+                }
+            }
+        } else if (othelloBoard[row + 1][col].equals(disk.getColor()) == false) {
+            for (int i = row + 1; i < 8; i++) {
+                if (othelloBoard[i][col].equals("white")) {
+                    break;
+                } else if (othelloBoard[i][col].equals(disk.getColor())) {
+                    result = i - 1;
+                }
+            }
+        }
+    }
+
     public int checkRow(Disk disk) {
         int result = -1;
         int row = disk.getRow();
         int col = disk.getCol();
         if (othelloBoard[row][col - 1].equals(disk.getColor()) == false) {
-            for (int j = col - 1; col >= 0; col--) {
+            for (int j = col - 1; j >= 0; j--) {
                 if (othelloBoard[row][j].equals("white")) {
                     break;
                 } else if (othelloBoard[row][j].equals(disk.getColor())) {
@@ -523,7 +585,7 @@ public class ArcadeApp extends Application {
             for (int j = col + 1; j < 8; j++) {
                 if (othelloBoard[row][j].equals("white")) {
                     break;
-                } else if ((othelloBoard[row][j].equals(disk.getColor())) {
+                } else if (othelloBoard[row][j].equals(disk.getColor())) {
                     result = j - 1;
                 }
             }
@@ -552,10 +614,10 @@ public class ArcadeApp extends Application {
             }
         } else if (row == 7 && col == 0) {
             if (othelloBoard[row - 1][col].equals("w") && othelloBoard[row][col + 1].equals("w")
-                && othelloBoard[row - 1][col + 1]) {
+                && othelloBoard[row - 1][col + 1].equals("w")) {
                 result = false;
             }
-        } else if (row = 0) {
+        } else if (row == 0) {
             if (othelloBoard[row][col - 1].equals("w") && othelloBoard[row][col + 1].equals("w")
                 && othelloBoard[row + 1][col - 1].equals("w") && othelloBoard[row + 1][col]
                 .equals("w") && othelloBoard[row + 1][col + 1].equals("w")) {
