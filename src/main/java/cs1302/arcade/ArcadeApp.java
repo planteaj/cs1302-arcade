@@ -135,6 +135,7 @@ public class ArcadeApp extends Application {
 
 
     private Timeline rGamePlayLoop() {
+         Duration oneFrameAmt = Duration.millis(1000 / 60);
         final KeyFrame rFrame = new KeyFrame(oneFrameAmt, new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent event) {
 
