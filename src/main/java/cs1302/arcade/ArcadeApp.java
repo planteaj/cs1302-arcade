@@ -109,6 +109,7 @@ public class ArcadeApp extends Application {
     String[][] othelloBoard = new String[boardSize][boardSize];
     Sprite[][] othelloPieces = new Sprite[boardSize][boardSize];
     Disk[][] boardPieces = new Disk[boardSize][boardSize];
+    String currentColor = "blue";
     Group rGroup = new Group();;
     Double mouseX = 0.0;
     Double mouseY = 0.0;
@@ -380,6 +381,19 @@ public class ArcadeApp extends Application {
             }
        };
 
+    private EventHandler<? super MouseEvent> playReversi = new EventHandler<? super MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                Disk disk = e.getSource();
+                String color = getCurrentColor();
+                if (checkPiece(disk) == false) {
+                    return;
+                } else {
+
+                }
+            }
+        };
+
     /** {@inheritDoc} */
     @Override
     public void start(Stage stage) {
@@ -456,7 +470,7 @@ public class ArcadeApp extends Application {
                     rGrid.add(disk, 4, 4);
                 } else {
                     disk = new Disk(10.0, Paint.valueOf("white"), i, j, "white");
-                    //disk.setOnMousePressed(playOthello); //need to define function playOthello
+                    disk.setOnMousePressed(playReversi); //need to define function playOthello
                     rGrid.add(disk, j, i);
                 }
                 boardPieces[i][j] = disk;
@@ -473,6 +487,74 @@ public class ArcadeApp extends Application {
         othelloBoard[3][4] = "r";
         othelloBoard[4][3] = "r";
         othelloBoard[4][4] = "b";
+    }
+
+    public boolean checkPiece(Disk disk) {
+        boolean result = true;
+        int row = disk.getRow();
+        int col = disk.getCol();
+        if (row == 0 && col == 0) {
+            if (othelloBoard[row + 1][col].equals("w") && othelloBoard[row][col + 1].equals("w") &&
+                othelloBoard[row + 1][col + 1].equals("w")) {
+                result = false;
+            }
+        } else if (row == 0 && col == 7) {
+            if (othelloBoard[row][col - 1].equals("w") && othelloBoard[row + 1][col].equals("w")
+                && othelloBoard[row + 1][col - 1].equals("w")) {
+                result = false;
+            }
+        } else if (row == 7 && col == 7) {
+            if (othelloBoard[row - 1][col].equals("w") && othelloBoard[row][col - 1].equals("w")
+                && othelloBoard[row - 1][col - 1].equals("w")) {
+                result = false;
+            }
+        } else if (row == 7 && col == 0) {
+            if (othelloBoard[row - 1][col].equals("w") && othelloBoard[row][col + 1].equals("w")
+                && othelloBoard[row - 1][col + 1]) {
+                result = false;
+            }
+        } else if (row = 0) {
+            if (othelloBoard[row][col - 1].equals("w") && othelloBoard[row][col + 1].equals("w")
+                && othelloBoard[row + 1][col - 1].equals("w") && othelloBoard[row + 1][col]
+                .equals("w") && othelloBoard[row + 1][col + 1].equals("w")) {
+                result = false;
+            }
+        } else if (col == 7) {
+            if (othelloBoard[row - 1][col].equals("w") && othelloBoard[row + 1][col].equals("w")
+                && othelloBoard[row - 1][col - 1].equals("w") && othelloBoard[row][col - 1]
+                .equals("w") && othelloBoard[row + 1][col + 1].equals("w")) {
+                result = false;
+            }
+        } else if (row == 7) {
+            if (othelloBoard[row][col - 1].equals("w") && othelloBoard[row][col + 1].equals("w")
+                && othelloBoard[row - 1][col - 1].equals("w") && othelloBoard[row - 1][col]
+                .equals("w") && othelloBoard[row - 1][col + 1].equals("w")) {
+                result = false;
+            }
+        } else if (col == 0) {
+            if (othelloBoard[row - 1][col].equals("w") && othelloBoard[row + 1][col].equals("w")
+                && othelloBoard[row - 1][col + 1].equals("w") && othelloBoard[row][col + 1]
+                .equals("w") && othelloBoard[row + 1][col + 1].equals("w")) {
+                result = false;
+            }
+        } else {
+            if (othelloBoard[row - 1][col - 1].equals("w") && othelloBoard[row - 1][col]
+                .equals("w") && othelloBoard[row - 1][col + 1].equals("w") &&
+                othelloBoard[row][col - 1].equals("w") && othelloBoard[row][col + 1].equals("w")
+                && othelloBoard[row + 1][col - 1].equals("w") && othelloBoard[row + 1][col]
+                .equals("w") && othelloBoard[row + 1][col + 1].equals("w")) {
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    public String getCurrentColor() {
+        return currentColor;
+    }
+
+    public void setCurrentColor(String c) {
+        currentColor = c;
     }
 
     private Scene centipede() {
